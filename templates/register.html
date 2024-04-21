@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="default">
+		<meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap:">
+		<link rel="icon" href="images/favicon.png">
+		<title>Osvaro - Neomorphism Design Mobile Template UI Kit</title>
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,500i,700,900&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="{% static 'css/framework7.bundle.min.css' %}">
+		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	</head>
+	<body>
+		
+		<div id="app">
+			<div class="view view-main view-init" data-url="/">
+                <div class="page page-current">
+                    <div class="page-content">
+                        <!-- profile edit -->
+                        <div class="segments-page">
+                            <div class="container">
+                                <div class="profile-edit">
+                                    <div class="content-edit">
+										<div class="login-register">
+											<h1 class="text-center">Register Now</h1>
+										</div>
+                                        <div class="separator-small"></div>
+										<div class="separator-small"></div>
+                
+                                        <div class="wrap-form">
+                                            <form class="list no-hairlines-md" id="register-form" method="post">{% csrf_token %}
+												<ul>
+													<li class="item-content item-input item-input-with-value">
+														<div class="item-inner">
+															<div class="item-title item-label">Name</div>
+															<div class="item-input-wrap">
+																<input type="text" name="name" placeholder="Enter full name" class="input-with-value" required>
+																<span class="input-clear-button"></span>
+															</div>
+														</div>
+													</li>
+													<li class="item-content item-input item-input-with-value">
+														<div class="item-inner">
+															<div class="item-title item-label">Blood Group <i class="fa fa-chevron-down"></i></div>
+															<div class="item-input-wrap"> 
+																<select name="blood_group" required>
+																	<option disabled selected>Your blood group</option>
+																	<option value="a-positive">A+</option>
+																	<option value="a-negetive">A-</option>
+																	<option value="b-positive">B+</option>
+																	<option value="b-negetive">B-</option>
+																	<option value="ab-positive">AB+</option>
+																	<option value="ab-negetive">AB-</option>
+																	<option value="o-positive">O+</option>
+																	<option value="o-negetive">O-</option>
+																</select>
+																
+															</div>
+														</div>
+													</li>
+													<li class="item-content item-input item-input-with-value">
+														<div class="item-inner">
+															<div class="item-title item-label">Number</div>
+															<div class="item-input-wrap">
+																<input type="number" name="username" placeholder="Enter your number" class="input-with-value" required>
+																<span class="input-clear-button"></span>
+															</div>
+														</div>
+													</li>
+													<li class="item-content item-input item-input-with-value">
+														<div class="item-inner">
+															<div class="item-title item-label">Email(optional)</div>
+															<div class="item-input-wrap">
+																<input type="email" name="email" placeholder="Enter your email" class="input-with-value">
+																<span class="input-clear-button"></span>
+															</div>
+														</div>
+													</li>
+													<li class="item-content item-input item-input-with-value">
+														<div class="item-inner">
+															<div class="item-title item-label">Password</div>
+															<div class="item-input-wrap">
+																<input type="password" name="password" placeholder="Enter your password" class="input-with-value" required>
+																<span class="input-clear-button"></span>
+															</div>
+														</div>
+													</li>
+													<li class="item-content item-input item-input-with-value">
+														<div class="item-inner">
+															<div class="item-title item-label">Account Type <i class="fa fa-chevron-down"></i></div>
+															<div class="item-input-wrap">
+																<select name="account_type" id="account-type" required>
+																	<option selected disabled>Register As...</option>
+																	<option value="donner">A donner</option>
+																	<option value="non-donner">Non donner</option>
+																</select>
+															</div>
+														</div>
+													</li>
+													<div id="extra-fields"></div>
+												</ul>
+												
+												{% if error %}
+													<p style="color: red; font-size: 17px;">
+														{{ error }}
+													</p>
+													<div class="separator-small"></div>
+												{% endif %}						
+												<p class="text-center">Have an account? <a onclick="window.open('/','_self')">Login Now</a></p>
+												<div class="separator-small"></div>
+												<button type="submit" class="buttons buttons-center buttons-full">Register</button>
+											</form>
+                                            <div class="separator"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end profile edit -->
+                
+                    </div>
+                
+                </div>
+			</div>
+		</div>
+		<!-- script -->
+		<script src="{% static 'js/framework7.bundle.min.js' %}"></script>
+		<script src="{% static 'js/routes.js' %}"></script>
+		<script src="{% static 'js/app.js' %}"></script>
+		<script src="{% static 'js/app.js' %}"></script>
+		<!-- end script -->
+        <script>
+            
+
+            let nonDonnerHtml = `
+			<li class="item-content item-input item-input-with-value">
+				<div class="item-inner">
+					<div class="item-title item-label">Why you are not a donner? <i class="fa fa-chevron-down"></i></div>
+					<div class="item-input-wrap">
+						<select name="non_donner_reason" required>
+							<option disabled selected>Select a reason</option>
+							<option value="donner"> Higher Age </option>
+							<option value="non-donner">Other</option>
+						</select>
+					</div>
+				</div>
+			</li>
+            
+            `;
+
+            let donnerHtml = `
+                <input type="date" placeholder="Your date of birth" required>
+                <select name="" id="" required>
+                    <option disabled selected>Your Gender</option>
+                    <option value="">Male</option>
+                    <option value="">Female</option>
+                </select>
+
+                <select name="" id="" required>
+                    <option disabled selected>Your Union</option>
+                    <option value="">kaligang</option>
+                </select>
+                <input type="text" name="" id="" placeholder="Your current address" required>
+                <p>Upload a document 
+                    <a style="color:blue">(Accepted documents)</a>
+                </p>
+                <input type="file" required>
+                <div id="accepted-documents">
+                    <p>Accepted documents:</p>
+                    <p>*Nid</p>
+                    <p>*licence</p>
+                    <p>*passport</p>
+                </div>
+            `;
+
+            // manage account type
+            let form = document.body.querySelector('form#register-form');
+			let accountType = form.querySelector('select#account-type');
+			let fieldSpace = form.querySelector("#extra-fields");
+
+            accountType.addEventListener('change',(event)=>{
+                let type = event.target.value;
+                if(type == "non-donner"){
+                    fieldSpace.innerHTML = nonDonnerHtml;
+                }else{
+					fieldSpace.innerHTML = "";
+				}
+            });
+        </script>
+	</body>
+</html>

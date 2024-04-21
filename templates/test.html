@@ -1,0 +1,92 @@
+
+<ul>
+    <li class="item-content item-input item-input-with-value">
+        <div class="item-inner">
+            <div class="item-title item-label">Name</div>
+            <div class="item-input-wrap">
+                <input type="text" value="Juan Black Doe" placeholder="Enter full name" class="input-with-value">
+                <span class="input-clear-button"></span>
+            </div>
+        </div>
+    </li>
+    <li class="item-content item-input item-input-with-value">
+        <div class="item-inner">
+            <div class="item-title item-label">Blood Group</div>
+            <div class="item-input-wrap">
+                <select required>
+                    <option disabled selected>Your blood group</option>
+                    <option value="">A+</option>
+                    <option value="">A-</option>
+                    <option value="">B+</option>
+                    <option value="">B-</option>
+                    <option value="">AB+</option>
+                    <option value="">AB-</option>
+                    <option value="">O+</option>
+                    <option value="">O-</option>
+                </select>
+                <span class="input-clear-button"></span>
+            </div>
+        </div>
+    </li>
+    <li class="item-content item-input item-input-with-value">
+        <div class="item-inner">
+            <div class="item-title item-label">Number</div>
+            <div class="item-input-wrap">
+                <input type="text" placeholder="Enter your number" class="input-with-value">
+                <span class="input-clear-button"></span>
+            </div>
+        </div>
+    </li>
+    <li class="item-content item-input item-input-with-value">
+        <div class="item-inner">
+            <div class="item-title item-label">Email(optional)</div>
+            <div class="item-input-wrap">
+                <input type="email" placeholder="Enter your email" class="input-with-value">
+                <span class="input-clear-button"></span>
+            </div>
+        </div>
+    </li>
+    <li class="item-content item-input item-input-with-value">
+        <div class="item-inner">
+            <div class="item-title item-label">Password</div>
+            <div class="item-input-wrap">
+                <input type="password" placeholder="Enter your password" class="input-with-value">
+                <span class="input-clear-button"></span>
+            </div>
+        </div>
+    </li>
+    <li class="item-content item-input item-input-with-value">
+        <div class="item-inner">
+            <div class="item-title item-label">Account Type</div>
+            <div class="item-input-wrap">
+                <select name="" id="account-type" required>
+                    <option selected disabled>Register As...</option>
+                    <option value="donner">A donner</option>
+                    <option value="non-donner">Non donner</option>
+                </select>
+                <span class="input-clear-button"></span>
+            </div>
+        </div>
+    </li>
+</ul>
+
+<div id="extra-fields"></div>
+                                    
+                                    <p class="text-center">Have an account? <a onclick="window.open(`{% url 'login' %}`,'_self')">Login Now</a></p>
+                                    <div class="separator-small"></div>
+                                    <button type="submit" class="buttons buttons-center buttons-full">Register</button>
+
+
+<li class="item-content item-input item-input-with-value">
+    <div class="item-inner">
+        <div class="item-title item-label">Did you donated blood before?</div>
+        <div class="item-input-wrap">
+            <select required>
+                <option disabled selected>Select a option</option>
+                <option value="donner"> Yes </option>
+                <option value="non-donner">No</option>
+            </select>
+            <span class="input-clear-button"></span>
+        </div>
+    </div>
+</li>
