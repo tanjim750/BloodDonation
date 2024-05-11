@@ -1,7 +1,7 @@
 "use strict";
 var routes = [{
         path: '/',
-        Url: '.{% url "home" %}',
+        Url: './index.html',
     },
     {
         path: '/accordion/',

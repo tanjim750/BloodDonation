@@ -13,6 +13,13 @@
 		<link rel="stylesheet" href="{% static 'css/framework7.bundle.min.css' %}">
 		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
 		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<style>
+			#videoElement {
+				width: 400px;
+				height: 300px;
+				background-color: black;
+			}
+		</style>
 	</head>
 	<body>
 		
@@ -64,7 +71,7 @@
 										<div class="row icon-color">
 											<div class="col blood-grp" data-blood="ap">
 												<div class="content">
-													<img src="images/ap.webp" alt="A positive" style="height: 70px; width:70px;">
+													<img src="{% static 'images/ap.webp' %}" alt="A positive" style="height: 70px; width:70px;">
 													<h6>A Positive</h6>
 												</div>
 											</div>
@@ -390,7 +397,7 @@
                     <!-- navbar -->
                     <div class="navbar">
                         <div class="navbar-inner sliding navbar-pages">
-                            <a class="link back" onclick="window.open('{% url "home" %}','_self')">
+                            <a class="link back" onclick="window.open('{% url "profile" %}','_self')">
                                 <i class="fa fa-chevron-left"></i>
                             </a>
                             <h4>Edit Profile</h4>
@@ -405,11 +412,15 @@
                             <div class="container">
                                 <div class="profile-edit">
                                     <div class="content-edit">
+										{% if warning %}
+										 <h6 class="text-center" style="color: red;">{{warning}}</h6>
+										 <div class="separator-small"></div>
+										{% endif %}
                                         <div class="profile-user">
                                             <div class="content-image">
-                                                <img src="images/profile.png" alt="">
+                                                <img src="{{request.user.profile.image.url}}" alt="">
                                                 <form>
-                                                    <input type="file" id="button-upload">
+                                                    
                                                     <label for="button-upload" class="icon-upload"><i class="fas fa-camera"></i></label>
                                                 </form>
                                             </div>
@@ -418,31 +429,40 @@
                                         <div class="separator-small"></div>
                 
                                         <div class="wrap-form">
-                                            <form class="list no-hairlines-md">
+                                            <form class="list no-hairlines-md" id="edit-form" method="post" enctype="multipart/form-data">
+												{% csrf_token %}
+												{% if error %}
+													<p style="color: red; font-size: 17px;">
+														{{ error }}
+													</p>
+													<div class="separator-small"></div>
+												{% endif %}
+												{% if success %}
+													<p style="color: green; font-size: 17px;">
+														{{ success }}
+													</p>
+													<div class="separator-small"></div>
+												{% endif %}
+
+												<input type="file" name="image" id="button-upload" hidden>
                                                 <ul>
 													<li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
 															<div class="item-title item-label">Name</div>
 															<div class="item-input-wrap">
-																<input type="text" value="Juan Black Doe" placeholder="Enter full name" class="input-with-value">
+																<input type="text" name="name" value="{{request.user.profile.name}}" placeholder="Enter full name" class="input-with-value" required>
 																<span class="input-clear-button"></span>
 															</div>
 														</div>
 													</li>
 													<li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
-															<div class="item-title item-label">Blood Group</div>
+															<div class="item-title item-label">Blood Group <span style="color: rgb(112, 107, 107);">(Not Changeable)</span></div>
 															<div class="item-input-wrap">
 																<select disabled>
 																	<option disabled>Your blood group</option>
-																	<option value="" selected>A+</option>
-																	<option value="">A-</option>
-																	<option value="">B+</option>
-																	<option value="">B-</option>
-																	<option value="">AB+</option>
-																	<option value="">AB-</option>
-																	<option value="">O+</option>
-																	<option value="">O-</option>
+																	<option value="" selected>{{request.user.profile.blood_group.symbol}}</option>
+																	
 																</select>
 																<span class="input-clear-button"></span>
 															</div>
@@ -450,10 +470,12 @@
 													</li>
 													<li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
-															<div class="item-title item-label">Number</div>
+															<div class="item-title item-label">Number {% if request.user.profile.is_verified %} <span style="color: rgb(112, 107, 107);">(Not Changeable)</span> {% endif %}</div>
 															<div class="item-input-wrap">
-																<input type="text" placeholder="Enter your number" class="input-with-value">
-																<span class="input-clear-button"></span>
+																<input type="text" name="number" value="{{request.user.username}}" placeholder="Enter your number" class="input-with-value" {% if request.user.profile.is_verified %} readonly {% else %} required {% endif %} >
+																{% if request.user.profile.is_verified == False %}
+																	<span class="input-clear-button"></span>
+																{% endif %}
 															</div>
 														</div>
 													</li>
@@ -461,51 +483,85 @@
 														<div class="item-inner">
 															<div class="item-title item-label">Email</div>
 															<div class="item-input-wrap">
-																<input type="email" placeholder="Enter your email" class="input-with-value">
+																<input type="email" name="email" value="{{request.user.email}}" placeholder="Enter your email" class="input-with-value">
 																<span class="input-clear-button"></span>
 															</div>
 														</div>
 													</li>
+													{% if request.user.profile.is_under_review == False %}
 													<li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
-															<div class="item-title item-label">Did you donated blood before?</div>
+															<div class="item-title item-label">Did you donated blood before? <i class="fa fa-chevron-down"></i></div>
 															<div class="item-input-wrap">
-																<select required>
+																<select name="donated_before" required>
 																	<option disabled selected>Select a option</option>
-																	<option value="donner"> Yes </option>
-																	<option value="non-donner">No</option>
+																	<option value="yes"> Yes </option>
+																	<option value="no">No</option>
 																</select>
 															</div>
 														</div>
 													</li>
+													<div id="extra-field"></div>
+													{% endif %}
 													<li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
-															<div class="item-title item-label">Birthday</div>
+															<div class="item-title item-label">Birthday <span style="color: rgb(112, 107, 107);">(mm/dd/yy)</span></div>
 															<div class="item-input-wrap">
-																<input type="date" placeholder="Enter date of birth" class="input-with-value">
-																<span class="input-clear-button"></span>
+																<input type="date" value="{{request.user.profile.dob|date:'Y-m-d'}}" name="dob" placeholder="Enter date of birth" class="input-with-value" required>
+																<!-- <span class="input-clear-button"></span> -->
 															</div>
 														</div>
 													</li>
 													<li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
-															<div class="item-title item-label">Gender</div>
+															<div class="item-title item-label">Gender <i class="fa fa-chevron-down"></i></div>
 															<div class="item-input-wrap">
-																<select name="" id="" required>
+																<select name="gender" id="" required>
 																	<option selected disabled>Your Gender</option>
-																	<option value="">Male</option>
-																	<option value="">Female</option>
+																	<option value="male" {% if request.user.profile.gender == 'male' %}selected{% endif %}>Male</option>
+																	<option value="female" {% if request.user.profile.gender == 'female' %}selected{% endif %}>Female</option>
 																</select>
 															</div>
 														</div>
 													</li>
 													<li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
-															<div class="item-title item-label">Union</div>
+															<div class="item-title item-label">District <i class="fa fa-chevron-down"></i></div>
 															<div class="item-input-wrap">
-																<select name="" id="" required>
-																	<option disabled selected>Your Union</option>
-																	<option value="">kaligang</option>
+																<select name="district" id="district" required>
+																	<option disabled selected>Your District</option>
+																	{% if request.user.profile.district %}
+																	<option selected value="{{request.user.profile.district.district}}">{{request.user.profile.district.district}}</option>
+																	{% endif %}
+																	{% for d in district %}
+																		<option value="{{d.district}}">{{d.district}}</option>
+																	{% endfor %}
+																</select>
+															</div>
+														</div>
+													</li>
+													<li class="item-content item-input item-input-with-value">
+														<div class="item-inner">
+															<div class="item-title item-label">Upazila <i class="fa fa-chevron-down"></i></div>
+															<div class="item-input-wrap">
+																<select name="upazila" id="upazila" required>
+																	<option disabled selected>At first select district</option>
+																	{% if request.user.profile.upazila %}
+																		<option selected value="{{request.user.profile.upazila.upazila}}">{{request.user.profile.upazila.upazila}}</option>
+																	{% endif %}
+																</select>
+															</div>
+														</div>
+													</li>
+													<li class="item-content item-input item-input-with-value">
+														<div class="item-inner">
+															<div class="item-title item-label">Union <i class="fa fa-chevron-down"></i></div>
+															<div class="item-input-wrap">
+																<select name="unions" id="union" required>
+																	<option disabled selected>At first select Upazila</option>
+																	{% if request.user.profile.unions %}
+																		<option selected value="{{request.user.profile.unions.unions}}">{{request.user.profile.unions.unions}}</option>
+																	{% endif %}
 																</select>
 															</div>
 														</div>
@@ -514,32 +570,40 @@
 														<div class="item-inner">
 															<div class="item-title item-label">Current Address</div>
 															<div class="item-input-wrap">
-																<input type="text" name="" id="" placeholder="Your current address" required>
+																<input type="text" value="{{request.user.profile.address}}" name="address" id="" placeholder="Your current address" required>
 																<span class="input-clear-button"></span>
 															</div>
 														</div>
 													</li>
+													{% if request.user.profile.is_under_review == False %}
 													<li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
 															<div class="item-title item-label">Upload A document <span style="color:blue">(Accepted documents)</span></div>
 															<div class="item-input-wrap">
-																<input type="file" name="" id="" multiple="false" required>
+																<input type="file" name="document" id="" multiple="false" required>
 																<span class="input-clear-button"></span>
 															</div>
 														</div>
 													</li>
-
 													<div id="accepted-documents">
 														<p>Accepted documents:</p>
 														<p>*Nid</p>
 														<p>*licence</p>
 														<p>*passport</p>
+														<p>*Birth certificate</p>
+														<p>*Any photo ID</p>
 													</div>
+													{% endif %}
+													
+
+													
 												</ul>
+												<div class="separator-small"></div>
+												
+												<div class="separator-small"></div>
+												<button type="submit" class="buttons buttons-center buttons-full">Save Changes</button>
+												<div class="separator"></div>
                                             </form>
-											<div class="separator-small"></div>
-											<button type="submit" class="buttons buttons-center buttons-full">Save Changes</button>
-                                            <div class="separator"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -553,17 +617,72 @@
 			</div>
 		</div>
 		<!-- script -->
+
         <script>
+			
+
+			let available_upazila = {
+				{% for d in district %}
+						"{{d.district}}":[
+							{% for upazila in d.upazila_set.all %}"{{upazila.upazila}}",{% endfor %}
+						],
+				{% endfor %}
+			};
+
+			let available_unions = {
+				{% for u in upazila %}
+						"{{u.upazila}}":[
+							{% for unions in u.unions_set.all %}"{{unions.unions}}",{% endfor %}
+						],
+				{% endfor %}
+			};
+
+			function addressChainDropwon(){
+				let district = document.querySelector('select#district');
+				let upazila = document.querySelector('select#upazila');
+				let unions = document.querySelector('select#union');
+
+				district.addEventListener('change',(e)=>{
+					let value = e.target.value;
+					let upazila_list = available_upazila[value];
+					upazila.innerHTML = "<option disabled selected>Select Your Upazila</option>";
+
+					upazila_list.forEach((up)=>{
+						let option = document.createElement('option');
+						option.text = up;
+						option.value = up;
+						upazila.appendChild(option);
+					});
+				});
+
+				upazila.addEventListener('change',(e)=>{
+					let value = e.target.value;
+					let unions_list = available_unions[value];
+					unions.innerHTML = innerHTML = "<option disabled selected>Select Your Union</option>";;
+
+					unions_list.forEach((up)=>{
+						let option = document.createElement('option');
+						option.text = up;
+						option.value = up;
+						unions.appendChild(option);
+					});
+				});
+			}
+			addressChainDropwon()
+
             let content_image = document.querySelector('div.content-image');
             let img = content_image.querySelector('img');
             let input = document.querySelector('input#button-upload');
+			let profile = document.querySelector('input[name=profile]');
 
             input.addEventListener('change',(event) => {
                 let image = event.target.files[0];
+				
                 var reader  = new FileReader();
 
                 reader.onloadend = function () {
-                    img.src = reader.result;
+					
+					img.src = reader.result;
                 }
 
                 if (image) {
@@ -571,7 +690,62 @@
                 }
 
             });
+
+
+			// extra field 
+			let extra_field = `
+			<li class="item-content item-input item-input-with-value">
+				<div class="item-inner">
+					<div class="item-title item-label">How many times you have donated? </div>
+					<div class="item-input-wrap">
+						<input type="number" name="total_donation" id="" placeholder="Enter the number" required>
+						<span class="input-clear-button"></span>
+					</div>
+				</div>
+			</li>
+			<li class="item-content item-input item-input-with-value">
+				<div class="item-inner">
+					<div class="item-title item-label"> How many days have gone after last donate <i class="fa fa-chevron-down"></i></div>
+					<div class="item-input-wrap">
+						<select name="last_donnation" required>
+							<option disabled selected>Select a option</option>
+							<option value="100">More then 90 days</option>
+							<option value="85">80-90 days</option>
+							<option value="70">60-80 days</option>
+							<option value="50">40-60 days</option>
+							<option value="30">20-40 days</option>
+							<option value="10">0-20 days</option>
+						</select>
+					</div>
+				</div>
+			</li>
+            
+            `;
+
+			let donated_before = document.querySelector('select[name=donated_before]')
+			donated_before.addEventListener('change',(e)=>{
+				let value = e.target.value;
+
+				if(value == "yes"){
+					document.querySelector('div#extra-field').innerHTML = extra_field;
+				}else{
+					document.querySelector('div#extra-field').innerHTML = "";
+				}
+			});
+
+			let edit_form = document.querySelector('form#edit-form');
+			let last_donnation = document.querySelector('select#last_donnation');
+			let gender = document.querySelector('select#gender');
+			let district = document.querySelector('select#district');
+			let upazila = document.querySelector('select#upazila');
+			let unions = document.querySelector('select#unions');
+
+
+			edit_form.addEventListener('submit',(e)=>{
+				
+			});
         </script>
+		
 		<script src="{% static 'js/framework7.bundle.min.js' %}"></script>
 		<script src="{% static 'js/routes.js' %}"></script>
 		<script src="{% static 'js/app.js' %}"></script>

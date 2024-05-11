@@ -1,0 +1,355 @@
+{% load static %}
+{% load linebreak %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap:">
+    <link rel="icon" href="images/favicon.png">
+    <title>Osvaro - Neomorphism Design Mobile Template UI Kit</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,500i,700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/framework7.bundle.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div id="app">
+        <div class="view view-main view-init" data-url="/">
+            <div class="page page-home page-with-subnavbar">
+                <div class="toolbar tabbar tabbar-labels toolbar-bottom">
+                    <div class="toolbar-inner">
+                        <a href="#home" class="tab-link tab-link-active">
+								<i class="fa fa-home"></i>
+								<p>Home</p>
+							</a>
+                        <a href="#donate" class="tab-link">
+								<i class="fas fa-star"></i>
+								<p>Donate us</p>
+							</a>
+                        <a href="#phonebook" class="tab-link">
+								<i class="fas fa-clone"></i>
+								<p>Urgent number</p>
+							</a>
+                        <a href="#account" class="tab-link">
+								<i class="fas fa-mobile"></i>
+								<p>Profile</p>
+							</a>
+                    </div>
+                </div>
+
+                <!-- tabs -->
+                <div class="tabs-animated-wrap">
+                    <div class="tabs">
+                        <!-- tabs 1 -->
+                        <div id="home" class="tab page-content tab-active">
+                            <!-- home -->
+                            <div class="container">
+                                <div class="separator"></div>
+                                <!-- title home -->
+                                <div class="title-home" >
+                                    <div class="content" style="background: red;">
+                                        <div class="separator-small"></div>
+                                        <h1 style="color:black">{{home_page.header_text}}</h1>
+                                        <p class="text-black p-sm">
+                                            {{home_page.title}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <!-- end title home -->
+                                <div class="separator"></div>
+                                <!-- features -->
+                                <div class="features-home">
+                                    <h3 style="color:red">{{home_page.heading}}</h3>
+                                    {% for groups in blood_group %}
+                                        <div class="row icon-color2">
+                                            {% for group in groups %}
+                                                <div class="col blood-grp" data-url="{% url 'find-donner' %}?group={{group.id}}">
+                                                    <div class="content">
+                                                        <img src="{{group.image.url}}" alt="{{group.name}}" style="height: 70px; width:70px;">
+                                                        <h6 class="text-cr-bd">{{group.name}}</h6>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <!-- end features -->
+                                <div class="separator"></div>
+                                <!-- follow us -->
+                                <div class="follow-us">
+                                    <h3>Follow us on :</h3>
+                                    <ul>
+                                        {% if home_page.facebook_url %}
+                                        <li>
+                                            <a onclick="window.open('{{home_page.facebook_url}}','_blank')"><span class="socmed-bg-facebook">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </span></a>
+                                        </li>
+                                        {% endif %}
+                                        {% if home_page.twitter_url %}
+                                        <li>
+                                            <a onclick="window.open('{{home_page.twitter}}','_blank')"><span class="socmed-bg-twitter">
+                                                <i class="fab fa-twitter"></i>
+                                            </span></a>
+                                        </li>
+                                        {% endif %}
+                                        
+                                        {% if home_page.whatsapp_url %}
+                                        <li>
+                                            <a onclick="window.open('{{home_page.whatsapp_url}}','_blank')"><span class="socmed-bg-whatsapp">
+                                                <i class="fab fa-whatsapp"></i>
+                                            </span></a>
+                                        </li>
+                                        {% endif %}
+
+                                        {% if home_page.google_url %}
+                                        <li>
+                                            <a onclick="window.open('{{home_page.google_url}}','_blank')"><span class="socmed-bg-google">
+                                                <i class="fab fa-google"></i>
+                                            </span></a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                    <div class="separator-small"></div>
+                                    <span>{{home_page.footer_text}}</span>
+                                </div>
+                                <!-- end follow us -->
+                                <!-- end features -->
+                                <div class="separator-big"></div>
+                                
+                            </div>
+                            <!-- end home -->
+                        </div>
+                        <!-- end tabs 1 -->
+                        <!-- tabs 2 -->
+                        <div id="donate" class="tab page-content">
+                            <!-- elements -->
+                            <div class="container">
+                                <div class="separator"></div>
+                                <div class="page page-current">
+                                    <!-- navbar -->
+                                   <div class="navbar">
+                                       <div class="navbar-inner sliding navbar-pages">
+                                        <a data-page="home-page" class="tab-link link back">
+                                            <i class="fa fa-home"></i>
+                                        </a>
+                                           <h4>Donate Us</h4>
+                                          <div class="item-right"></div>
+                                       </div>
+                                   </div>
+                                   <!-- end navbar -->
+                                   <div class="page-content">
+                                       <!-- accordion -->
+                                       <div class="segments-page">
+                                        <!-- why we need donates  -->
+                                        <div class="container tooltip-pages">
+                                            <div class="content-box"> 
+                                                <p class="p-lg" style="color: black;"> {{donation_account.first.why_donations_need}} &nbsp;<i class="fas fa-info-circle tooltip-init" data-tooltip="Why we need donations?"></i></p>
+                                            </div>
+                                            <div class="separator"></div>
+                                        </div>
+                                        <!-- end  -->
+                                           <div class="container">
+                                               
+                                               <div class="accordion accordion-icon content-entry">
+                                                   <div class="list accordion-list">
+                                                       <ul>
+                                                            {% for ac in donation_account %}
+                                                                <li class="accordion-item">
+                                                                    <a href="" class="item-link item-content">
+                                                                        <div class="item-inner">
+                                                                            <div class="item-title"><i class="fa fa-dollar-sign"></i><span class="text-blue">{{ac.account_type}}</span></div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <div class="accordion-item-content">
+                                                                        <br>
+                                                                        <h3 style="color: #E74856;">{{ac.address|linebreak|safe}}</h3>
+                                                                        
+                                                                        <p style="color: black;">{{ac.details}}</p>
+                                                                    </div>
+                                                                </li>
+                                                           {% endfor %}
+                                                          
+                                                       </ul>
+                                                   </div>
+                                               </div>
+                                               <!-- end accordion icon -->
+                                               
+                                               
+                                           </div>
+                                       </div>
+                                       <!-- end accordion -->
+                                   </div>
+                                   
+                               </div>
+                            </div>
+                            <!-- end elements -->
+                            <div class="separator-big"></div>
+                        </div>
+                        <!-- end tabs 2 -->
+                        <!-- tabs 3 -->
+                        <div id="phonebook" class="tab page-content">
+                            <!-- pages -->
+                            <div class="container">
+                                <div class="separator"></div>
+                                <div class="page page-current">
+                                    <!-- navbar -->
+                                    <div class="navbar">
+                                        <div class="navbar-inner sliding navbar-pages">
+                                        <a data-page="home-page" class="tab-link link back">
+                                            <i class="fa fa-home"></i>
+                                        </a>
+                                            <h4>Urgent Numbers</h4>
+                                            <div class="item-right"></div>
+                                        </div>
+                                    </div>
+                                    <!-- end navbar -->
+                                    <div class="page-content">
+                                        <!-- accordion -->
+                                        <div class="segments-page">
+                                        <div class="container">
+                                        {% for urgent in urgent_numbers %}
+                                        <div class="separator"></div>
+                                        <h5 class="text-blue">{{urgent.zone}}</h5>
+                                        <div class="separator-small"></div>
+                        
+                                        <!-- links list -->
+                                        <div class="list links-list list-view">
+                                            <ul>
+                                                {% for number in urgent.urgentnubmer_set.all %}
+                                                <li >
+                                                    <a onclick="window.open('tel:{{number.number}}');"><span style="color: black;">{{number.name}}</span> <span style="color: crimson;">{{number.number}} &nbsp;&nbsp;&nbsp;&nbsp;</span></a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <!-- end links list -->
+                                        {% endfor %}
+
+                                        
+                                    
+                                    </div>
+                                        <div class="separator-small"></div>
+                                        <div class="separator-small"></div>
+                                        <div class="separator-small"></div>
+                                        </div>
+                                        <!-- end accordion -->
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <!-- end pages -->
+                            <div class="separator-big"></div>
+                        </div>
+                        <!-- end tabs 3 -->
+                        <!-- tabs 4 -->
+                        <div id="account" class="tab page-content">
+                            <!-- apps -->
+                            <div class="container">
+                                <div class="separator"></div>
+                                <div class="list-li">
+                                    <ul>
+                                        {% if request.user.is_superuser %}
+                                        <li>
+                                            <a onclick="window.open('{% url "admin:index" %}','_self')">
+                                                <i class="fa fa-th-list"></i> Admin dashboard <span><i class="fa fa-chevron-right"></i></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a onclick="window.open('{% url "admin:index" %}','_self')">
+                                                <i class="fa fa-expand"></i> Verification requests <span><i class="fa fa-chevron-right"></i></span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        
+                                        {% if request.user.profile.is_donner %}
+                                        <li>
+                                            <a onclick="window.open('{% url "profile" %}','_self')">
+                                                <i class="fa fa-user"></i> Profile <span><i class="fa fa-chevron-right"></i></span>
+                                            </a>
+                                        </li>
+                                        {% else %}
+                                        <li>
+                                            <a onclick="window.open('{% url "change-account-type" %}','_self')">
+                                                <i class="fa fa-edit"></i> Change Account Type <span><i class="fa fa-chevron-right"></i></span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        <li>
+                                            <a onclick="window.open('{% url "change-password" %}','_self')">
+                                                <i class="fa fa-lock"></i> Change Password <span><i class="fa fa-chevron-right"></i></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a onclick="window.open('{% url "logout" %}','_self')">
+                                                <i class="fa fa-power-off"></i> Logout <span><i class="fa fa-chevron-right"></i></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- end apps -->
+                            <div class="separator-big"></div>
+                        </div>
+                        <!-- end tabs 4 -->
+
+                    </div>
+                </div>
+                <!-- end tabs -->
+            </div>
+            <div class="page page-current">
+                <!-- navbar -->
+               <div class="navbar">
+                   <div class="navbar-inner sliding navbar-pages">
+                       <a onclick="history.back()" class="link back">
+                           <i class="fa fa-chevron-left"></i>
+                       </a>
+                       <h4>Verification Requests</h4>
+                      <div class="item-right"></div>
+                   </div>
+               </div>
+               <!-- end navbar -->
+               <div class="page-content">
+                   
+                   <!-- services -->
+                   <div class="segments-page">
+                       <div class="container">
+                           <div class="services">
+                            {% for profile in profiles %}
+                               <a onclick="window.open('{{admin_url}}app/profile/{{profile.id}}/change/','_self')">
+                                   <div class="content content-box">
+                                       <i>
+                                        <img src="{{profile.image.url}}" alt="" height="70px" width="70px" style="border-radius: 50%;">
+                                       </i>
+                                       <div class="service-title">
+                                           <h4>{{profile.name}}</h4>
+                                           <p>{{profile.user.username}}</p>
+                                       </div>
+                                   </div>
+                               </a>
+                            {% endfor %}
+                           </div>
+                       </div>
+                   </div>
+                   <!-- end services -->
+           
+               </div>
+           
+           </div>
+        </div>
+    </div>
+    <!-- script -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/framework7.bundle.min.js' %}"></script>
+    <script src="{% static 'js/routes.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    <!-- end script -->
+</body>
+
+</html>

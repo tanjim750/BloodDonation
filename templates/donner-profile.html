@@ -1,4 +1,5 @@
 {% load static %}
+{% load previous_donation %}
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -389,7 +390,7 @@
                     <!-- navbar -->
                     <div class="navbar">
                         <div class="navbar-inner sliding navbar-pages">
-                            <a class="link back" onclick="window.open('{% url "find-donner" %}','_self')">
+                            <a class="link back" onclick="history.back()">
                                 <i class="fa fa-chevron-left"></i>
                             </a>
                             <h4>Profile</h4>
@@ -406,26 +407,42 @@
                                     <div class="content-box">
                                         <div class="profile-user">
                                             <div class="content-image">
-                                                <img src="images/profile.png" alt="">
+                                                <img src="{{profile.image.url}}" alt="">
                                                 
                                             </div>
                                             <div class="profile-name">
-                                                <h4>John Doe</h4>
-                                                <span>Donner</span>
+                                                <h4>{{profile.name}}</h4>
+												{% if profile.is_verified %}
+														<b style="color: white; background-color: green; padding:5px 10px 5px 10px; border-radius: 15px; font-size: 13px;">
+															Verified
+														</b>
+												{% else %}
+													{% if profile.is_under_review %}
+														<b style="color: white; background-color: #0078D7; padding:5px 10px 5px 10px; border-radius: 15px; font-size: 13px;">
+															Under Review
+														</b>
+													{% else %}
+														<b style="color: white; background-color: #E74856; padding:5px 10px 5px 10px; border-radius: 15px; font-size: 13px;">
+															Not verified
+														</b>
+													{% endif %}
+												{% endif %}
                                             </div>
                                         </div>
                                         <div class="separator"></div>
-                                        <div class="profile-button">
-                                            <ul>
-												<li>
-                                                    <button class="buttons">01631596698</button>
-                                                </li>
-                                                <li>
-                                                    <button class="buttons" onclick="window.open('tel:+88016789123');">Call</button>
-                                                </li>
-                                                
-                                            </ul>
-                                        </div>
+										{% if profile.is_available %}
+											<div class="profile-button">
+												<ul>
+													<li>
+														<button class="buttons">{{profile.user.username}}</button>
+													</li>
+													<li>
+														<button class="buttons" onclick="window.open('tel:{{profile.user.username}}');">Call</button>
+													</li>
+													
+												</ul>
+											</div>
+										{% endif %}
                                     </div>
                                     <div class="separator-small"></div>
                                     <div class="content-box">
@@ -433,60 +450,68 @@
                                             <div class="row">
                                                 <div class="col-33">
                                                     <div class="content">
-                                                        <h5>A+</h5>
-                                                        <span>Blood</span>
+                                                        <h5 style="color: red;">{{profile.blood_group.symbol}}</h5>
+                                                        <span style="color: red;">Blood</span>
                                                     </div>
                                                 </div>
                                                 <div class="col-33">
                                                     <div class="content">
-                                                        <h5>3</h5>
-                                                        <span>Donations</span>
+                                                        <h5 style="color: #0078D7;">{{profile.total_donation}}</h5>
+                                                        <span style="color: #0078D7;">Donations</span>
                                                     </div>
                                                 </div>
                                                 <div class="col-33">
                                                     <div class="content">
-                                                        <h5>19</h5>
-                                                        <span>Age</span>
+                                                        <h5 style="color: #0078D7;">{{profile.age}}</h5>
+                                                        <span style="color: #0078D7;">Age</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="separator-small"></div>
-                                    <div class="list list-view">
-										<ul>
-											<li>
-												<div class="item-content">
-													<div class="item-media">
-														<i class="fas fa-bell"></i>
+									{% if profile.is_verified %}
+										<div class="list list-view">
+											<ul>
+												<li>
+													<div class="item-content">
+														<div class="item-media">
+															<i class="fas fa-bell"></i>
+														</div>
+														<div class="item-inner">
+															<div class="item-title">
+																{% if profile.last_donation|previous_donation < 90 %}
+																	Last Donnation {{profile.last_donation|previous_donation}} days ago
+																{% else %}
+																	Last Donnation more then 90 days ago
+																{% endif %}
+															</div>
+														</div>
 													</div>
-													<div class="item-inner">
-														<div class="item-title">Last Donnation 3 months ago</div>
+												</li>
+												<li>
+													<div class="item-content">
+														<div class="item-media">
+															<i class="fas fa-user"></i>
+														</div>
+														<div class="item-inner">
+															<div class="item-title">{{profile.gender}}</div>
+														</div>
 													</div>
-												</div>
-											</li>
-											<li>
-												<div class="item-content">
-													<div class="item-media">
-														<i class="fas fa-envelope"></i>
+												</li>
+												<li>
+													<div class="item-content">
+														<div class="item-media">
+															<i class="fas fa-home"></i>
+														</div>
+														<div class="item-inner">
+															<div class="item-title">{{profile.address}}</div>
+														</div>
 													</div>
-													<div class="item-inner">
-														<div class="item-title">Geder- Male</div>
-													</div>
-												</div>
-											</li>
-											<li>
-												<div class="item-content">
-													<div class="item-media">
-														<i class="fas fa-edit"></i>
-													</div>
-													<div class="item-inner">
-														<div class="item-title">Address- hw wh</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
+												</li>
+											</ul>
+										</div>
+									{% endif %}
                                 </div>
                             </div>
                         </div>

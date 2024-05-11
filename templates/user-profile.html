@@ -406,19 +406,35 @@
                                     <div class="content-box">
                                         <div class="profile-user">
                                             <div class="content-image">
-                                                <img src="images/profile.png" alt="">
+                                                <img src="{{request.user.profile.image.url}}" alt="">
                                                 
                                             </div>
                                             <div class="profile-name">
-                                                <h4>John Doe</h4>
-                                                <span style="color: red;">Donner</span>
+                                                <h4>{{request.user.profile.name}}</h4>
+                                                
+													{% if request.user.profile.is_verified %}
+														<b style="color: white; background-color: green; padding:5px 10px 5px 10px; border-radius: 15px; font-size: 13px;">
+															Verified
+														</b>
+													{% else %}
+														{% if request.user.profile.is_under_review %}
+															<b style="color: white; background-color: #0078D7; padding:5px 10px 5px 10px; border-radius: 15px; font-size: 13px;">
+																Under Review
+															</b>
+														{% else %}
+															<b style="color: white; background-color: #E74856; padding:5px 10px 5px 10px; border-radius: 15px; font-size: 13px;">
+																Not verified
+															</b>
+														{% endif %}
+													{% endif %}
+												
                                             </div>
                                         </div>
                                         <div class="separator"></div>
                                         <div class="profile-button">
                                             <ul>
 												<li>
-                                                    <button class="buttons">01631596698</button>
+                                                    <button class="buttons">{{request.user.username}}</button>
                                                 </li>
                                                 <li>
                                                     <button class="buttons" onclick="window.open('{% url "edit-profile" %}','_self');">Edit</button>
@@ -433,19 +449,19 @@
                                             <div class="row">
                                                 <div class="col-33">
                                                     <div class="content" >
-                                                        <h5 style="color: red;">A+</h5>
+                                                        <h5 style="color: red;">{{request.user.profile.blood_group.symbol}}</h5>
                                                         <span style="color: red;">Blood</span>
                                                     </div>
                                                 </div>
                                                 <div class="col-33">
                                                     <div class="content">
-                                                        <h5 style="color: #0078D7;">3</h5>
+                                                        <h5 style="color: #0078D7;">{{request.user.profile.total_donation}}</h5>
                                                         <span style="color: #0078D7;">Donations</span>
                                                     </div>
                                                 </div>
                                                 <div class="col-33">
                                                     <div class="content">
-                                                        <h5 style="color: #0078D7;">19</h5>
+                                                        <h5 style="color: #0078D7;">{{request.user.profile.age}}</h5>
                                                         <span style="color: #0078D7;">Age</span>
                                                     </div>
                                                 </div>
@@ -464,7 +480,7 @@
 															
 															<p>Do You Available for Donations? </p>
 															<div class="toggle">
-																<input class="toggle-input" type="checkbox" checked id="btn">
+																<input class="toggle-input" type="checkbox" {% if request.user.profile.is_available %}checked{% endif %} id="btn">
 																<label for="btn">
 																  <span class="track">
 																	<span class="txt"></span>
@@ -492,33 +508,41 @@
 													</div>
 												</div>
 											</li>
+											{% if last_donation %}
 											<li>
 												<div class="item-content">
 													<div class="item-media">
 														<i class="fas fa-bell"></i>
 													</div>
 													<div class="item-inner">
-														<div class="item-title">Last Donnation 3 months ago</div>
+														<div class="item-title">
+															{% if last_donation < 90 %}
+																Last Donnation {{last_donation}} days ago
+															{% else %}
+																Last Donnation more then 90 days ago
+															{% endif %}
+														</div>
+													</div>
+												</div>
+											</li>
+											{% endif %}
+											<li>
+												<div class="item-content">
+													<div class="item-media">
+														<i class="fas fa-user"></i>
+													</div>
+													<div class="item-inner">
+														<div class="item-title">Male</div>
 													</div>
 												</div>
 											</li>
 											<li>
 												<div class="item-content">
 													<div class="item-media">
-														<i class="fas fa-envelope"></i>
+														<i class="fas fa-home"></i>
 													</div>
 													<div class="item-inner">
-														<div class="item-title">Geder- Male</div>
-													</div>
-												</div>
-											</li>
-											<li>
-												<div class="item-content">
-													<div class="item-media">
-														<i class="fas fa-edit"></i>
-													</div>
-													<div class="item-inner">
-														<div class="item-title">Address- hw wh</div>
+														<div class="item-title">{{request.user.profile.address}}</div>
 													</div>
 												</div>
 											</li>
@@ -551,13 +575,20 @@
 				statusTitle.style.color = "crimson";
 			}
 			availableForDn.addEventListener("change",() => {
-				if (availableForDn.checked) {
-					statusTitle.textContent = "You are available for donations";
-					statusTitle.style.color = "#0078D7";
-				}else{
-					statusTitle.textContent = "You are not available for donations";
-					statusTitle.style.color = "crimson";
-				}
+				fetch("/api/change-available-status/")
+					.then((response) => response.json())
+					.then((json) => {
+						if(json.status == 200){
+							if(json.is_available){
+								statusTitle.textContent = "You are available for donations";
+								statusTitle.style.color = "#0078D7";
+							}else{
+								statusTitle.textContent = "You are not available for donations";
+								statusTitle.style.color = "crimson";
+							}
+						}
+					});
+			  
 			});
 		</script>
 		<!-- end script -->

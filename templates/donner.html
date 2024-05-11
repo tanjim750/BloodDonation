@@ -1,4 +1,6 @@
 {% load static %}
+{% load previous_donation %}
+{% load linebreak %}
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -405,7 +407,10 @@
 								<!-- warning popup  -->
 								<div id="warning" class="popup popup-attention" style="display: none;">
 									<i class="fas fa-exclamation-triangle"></i>
-									<p>Please contact us for more info</p>
+									<h1>Warning</h1>
+									<div class="separator-small"></div>
+									<p id="available">{{warning.available|linebreak|safe}}</p>
+									<p id="not_available">{{warning.not_available|linebreak|safe}}</p>
 				
 									<a href="#" class="link popup-close buttons">Ok</a>
 								</div>
@@ -416,15 +421,23 @@
                                         <div class="separator-small"></div>
                 
                                         <div class="wrap-form">
-                                            <form class="list no-hairlines-md">
+                                            <form class="list no-hairlines-md" method="post">
+												{% csrf_token %}
                                                 <ul>
                                                     <li class="item-content item-input">
                                                         <div class="item-inner">
-                                                            <div class="item-title item-label">Name</div>
+                                                            <div class="item-title item-label">District <i class="fa fa-chevron-down"></i></div>
                                                             <div class="item-input-wrap">
-                                                                <select type="text" value="Juan Black Doe" placeholder="Enter full name" class="">
-                                                                    <option value="">Select a value</option>
-                                                                    <option value="">1</option>
+                                                                <select name="district" id="district" class="">
+																	{% if selected_district %}
+																		<option value="{{selected_district}}">{{selected_district}}</option>
+																	{% else %}
+                                                                    	<option value="">Select Your District</option>
+																	{% endif %}
+
+                                                                    {% for d in district %}
+																		<option value="{{d.district}}">{{d.district}}</option>
+																	{% endfor %}
                                                                 </select>
                                                                 <span class="input-clear-button"></span>
                                                             </div>
@@ -432,12 +445,14 @@
                                                     </li>
                                                     <li class="item-content item-input">
                                                         <div class="item-inner">
-                                                            <div class="item-title item-label">Name</div>
+                                                            <div class="item-title item-label">Upazila <i class="fa fa-chevron-down"></i></div>
                                                             <div class="item-input-wrap">
-                                                                <select type="text" value="Juan Black Doe" placeholder="Enter full name" class="">
-                                                                    <option value="">Select a value</option>
-                                                                    <option value="">1</option>
-                                                                    <option value="">2</option>
+                                                                <select id="upazila" name="upazila">
+                                                                    {% if selected_upazila %}
+																		<option value="{{selected_upazila}}">{{selected_upazila}}</option>
+																	{% else %}
+                                                                    	<option value="">At first select district</option>
+																	{% endif %}
                                                                 </select>
                                                                 <span class="input-clear-button"></span>
                                                             </div>
@@ -446,79 +461,70 @@
 
                                                     <li class="item-content item-input">
                                                         <div class="item-inner">
-                                                            <div class="item-title item-label">Name</div>
+                                                            <div class="item-title item-label">Union <i class="fa fa-chevron-down"></i></div>
                                                             <div class="item-input-wrap">
-                                                                <select type="text" value="Juan Black Doe" placeholder="Enter full name" class="">
-                                                                    <option value="">Select a value</option>
-                                                                    <option value="">1</option>
-                                                                    <option value="">2</option>
-                                                                    <option value="">3</option>
+                                                                <select id="union" name="unions">
+																	{% if selected_union %}
+																		<option value="{{selected_union}}">{{selected_union}}</option>
+																	{% else %}
+                                                                    	<option value="">At first select Upazila</option>
+																	{% endif %}
                                                                 </select>
                                                                 <span class="input-clear-button"></span>
                                                             </div>
                                                         </div>
                                                     </li>
                                                 </ul>
+												
+												<div class="separator"></div>
+												{% if error %}
+													<p style="color: red; font-size: 17px;">
+														{{ error }}
+													</p>
+													<div class="separator-small"></div>
+												{% endif %}		
+												<button type="submit" class="buttons buttons-center buttons-full">Search Donner</button>
                                             </form>
                                             <div class="separator"></div>
                                         </div>
                                     </div>
                                 </div>
-									 <!-- single donner -->
-                                   <div class="content donner" data-donner="disable">
-                                       <div class="row">
-                                           <div class="col">
-                                               <div class="left-icon icon-red">
-                                                   <i class="fa fa-mobile"></i>
-                                               </div>
-                                               <div class="text">
-                                                   <h6>Name</h6>
-                                                   <p><b>Address:</b> Bangladesh agriculture research institute</p>
-                                                   <p><b>Total Donations:</b> 5 times</p>
-                                                   <p><b>Previous Donation:</b> 5 months ago</p>
-                                                   <button class="buttons popup-open" data-popup=".popup-attention">Contact</button>
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="separator-small"></div>
-                                   <!-- single donner -->
-                                   <div class="content donner" data-donner="786767">
-                                       <div class="row">
-                                           <div class="col">
-                                               <div class="left-icon icon-red">
-                                                   <i class="fa fa-mobile"></i>
-                                               </div>
-                                               <div class="text">
-                                                   <h6>Name</h6>
-                                                   <p><b>Address:</b> Bangladesh agriculture research institute</p>
-                                                   <p><b>Total Donations:</b> 5 times</p>
-                                                   <p><b>Previous Donation:</b> 5 months ago</p>
-                                                   <button class="buttons popup-open" data-popup=".popup-attention">Contact</button>
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="separator-small"></div>
+									{% if donners %}
+										{% for donner in donners %}
+											<!-- single donner -->
+											<div class="content donner" data-donner="{% if donner.last_donation|previous_donation < 90 %}disable{% else %}{{donner.user.username}}{% endif %}">
+												<div class="row">
+													<div class="col">
+														<div class="left-icon icon-red">
+															<img src="{{donner.image.url}}" alt="{{donner.name}}" style="height: 50px; width: 50px; border-radius: 50%;">
+														</div>
+														<div class="text">
+															<h5><b>Name:</b> {{donner.name}}</h5>
+															
+															<p><b>Total Donations:</b> {{donner.total_donation}}</p>
+															<p><b>Previous Donation:</b> 
+																{% if donner.last_donation|previous_donation < 90 %}
+																	{{donner.last_donation|previous_donation}} days ago
+																{% else %}
+																	more then 90 days ago
+																{% endif %}
+															</p>
+															<p><b>Address:</b> {{donner.address}}</p>
+															<button class="buttons popup-open" data-popup=".popup-attention">Contact</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="separator-small"></div>
+										{% endfor %}
+									{% else %}
+											<div class="separator-big"></div>
+											<div class="separator-small"></div>
+											<h1 class="text-center" style="color:#E74856">Sorry No donners found </h1>
 
-								    <!-- single donner -->
-                                   <div class="content donner" data-donner="656454">
-                                       <div class="row">
-                                           <div class="col">
-                                               <div class="left-icon icon-red">
-                                                   <i class="fa fa-mobile"></i>
-                                               </div>
-                                               <div class="text">
-                                                   <h6>Name</h6>
-                                                   <p><b>Address:</b> Bangladesh agriculture research institute</p>
-                                                   <p><b>Total Donations:</b> 5 times</p>
-                                                   <p><b>Previous Donation:</b> 5 months ago</p>
-                                                   <button class="buttons popup-open" data-popup=".popup-attention">Contact</button>
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="separator-small"></div>
+									{% endif %}
+                                   <!-- single donner -->
+                                   
                                </div>
                            </div>
                            <!-- end career -->
@@ -541,6 +547,8 @@
 		<script>
 			let warning = document.querySelector('#warning');
 			let link = warning.querySelector('a.buttons');
+			let available = warning.querySelector('p#available');
+			let not_available = warning.querySelector('p#not_available');
 			let donners = document.querySelectorAll('div.donner');
 			
 			donners.forEach(donner => {
@@ -550,9 +558,63 @@
 					if(get_donner != 'disable'){
 						let url = "{% url "donner-profile" %}"+"?user="+get_donner;
 						link.setAttribute('onclick', `window.open('${url}','_self')`);
+						available.style.display = 'block';
+						not_available.style.display = 'none';
+					}else{
+						not_available.style.display = 'block';
+						available.style.display = 'none';
 					}
 				});
 			})
+
+			let available_upazila = {
+				{% for d in district %}
+						"{{d.district}}":[
+							{% for upazila in d.upazila_set.all %}"{{upazila.upazila}}",{% endfor %}
+						],
+				{% endfor %}
+			};
+
+			let available_unions = {
+				{% for u in upazila %}
+						"{{u.upazila}}":[
+							{% for unions in u.unions_set.all %}"{{unions.unions}}",{% endfor %}
+						],
+				{% endfor %}
+			};
+
+			function addressChainDropwon(){
+				let district = document.querySelector('select#district');
+				let upazila = document.querySelector('select#upazila');
+				let unions = document.querySelector('select#union');
+
+				district.addEventListener('change',(e)=>{
+					let value = e.target.value;
+					let upazila_list = available_upazila[value];
+					upazila.innerHTML = "<option disabled selected>Select Your Upazila</option>";
+
+					upazila_list.forEach((up)=>{
+						let option = document.createElement('option');
+						option.text = up;
+						option.value = up;
+						upazila.appendChild(option);
+					});
+				});
+
+				upazila.addEventListener('change',(e)=>{
+					let value = e.target.value;
+					let unions_list = available_unions[value];
+					unions.innerHTML = innerHTML = "<option disabled selected>Select Your Union</option>";;
+
+					unions_list.forEach((up)=>{
+						let option = document.createElement('option');
+						option.text = up;
+						option.value = up;
+						unions.appendChild(option);
+					});
+				});
+			}
+			addressChainDropwon()
 		</script>
 	</body>
 </html>

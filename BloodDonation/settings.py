@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-yz8#1=co5!_cog*4kmj(5cu(p5z@s^jkfyqb9u*ej^1&z95wn7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 LOGIN_URL = '/login/'
 
 # Application definition
@@ -119,8 +119,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_ROOT = BASE_DIR/'media'
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# email credentials 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = ''
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''

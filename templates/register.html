@@ -49,14 +49,9 @@
 															<div class="item-input-wrap"> 
 																<select name="blood_group" required>
 																	<option disabled selected>Your blood group</option>
-																	<option value="a-positive">A+</option>
-																	<option value="a-negetive">A-</option>
-																	<option value="b-positive">B+</option>
-																	<option value="b-negetive">B-</option>
-																	<option value="ab-positive">AB+</option>
-																	<option value="ab-negetive">AB-</option>
-																	<option value="o-positive">O+</option>
-																	<option value="o-negetive">O-</option>
+																	{% for blood in blood_groups %}
+																		<option value="{{blood.id}}">{{blood.symbol}}</option>
+																	{% endfor %}
 																</select>
 																
 															</div>
@@ -143,8 +138,9 @@
 					<div class="item-input-wrap">
 						<select name="non_donner_reason" required>
 							<option disabled selected>Select a reason</option>
-							<option value="donner"> Higher Age </option>
-							<option value="non-donner">Other</option>
+							{% for reason in non_donner_reasons %}
+								<option value="{{reason.value}}"> {{reason.reason}} </option>
+							{% endfor %}
 						</select>
 					</div>
 				</div>

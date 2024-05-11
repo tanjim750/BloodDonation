@@ -7,3 +7,4 @@ from .profile import Profile
 from .edit_profile import EditProfile
 from .change_password import ChangePassword
 from .change_account_type import ChangeAccountType
+from .verification_requests import VerificationRequests

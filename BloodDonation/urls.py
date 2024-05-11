@@ -15,19 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
 
-from app import views
+from app import urls as urls_
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.RedirectToHome.as_view(), name='index'),
-    path('home/', views.Home.as_view(), name='home'),
-    path('login/', views.Login.as_view(), name='login'),
-    path('register/', views.Register.as_view(), name='register'),
-    path('find-donner/', views.FindDonner.as_view(), name='find-donner'),
-    path('donner-profile/', views.DonnerProfile.as_view(), name='donner-profile'),
-    path('profile/', views.Profile.as_view(), name='profile'),
-    path('edit-profile/', views.EditProfile.as_view(), name='edit-profile'),
-    path('change-password/', views.ChangePassword.as_view(), name='change-password'),
-    path('change-account-type/', views.ChangeAccountType.as_view(), name='change-account-type'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns.extend(urls_.urlpatterns)

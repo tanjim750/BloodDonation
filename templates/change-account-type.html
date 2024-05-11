@@ -409,21 +409,21 @@
                 
                                         <div class="wrap-form">
                                             <div class="separator-small"></div>
-                                            <form class="list no-hairlines-md" id="change-form">
+                                            <form class="list no-hairlines-md" id="change-form" method="post">{% csrf_token %}
 												<ul>
                                                     <li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
 															<div class="item-title item-label">Account Type</div>
 															<div class="item-input-wrap">
-																<select name="" id="account-type" required>
+																<select name="account-type" id="account-type" required>
 																	<option selected disabled>Change As...</option>
 																	<option value="donner">A donner</option>
-																	<option value="non-donner">Non donner</option>
+																	<option value="non-donner" disabled>Non donner</option>
 																</select>
 															</div>
 														</div>
 													</li>
-                                                    <div id="extra-fields"></div>
+                                                    
                                                 </ul>
 												<div class="separator-small"></div>
 												<button type="submit" class="buttons buttons-center buttons-full">Save Changes</button>
@@ -446,116 +446,7 @@
 		<script src="{% static 'js/routes.js' %}"></script>
 		<script src="{% static 'js/app.js' %}"></script>
 		<script src="{% static 'js/app.js' %}"></script>
-        <script>
-            
-
-            let nonDonnerHtml = `
-			<li class="item-content item-input item-input-with-value">
-				<div class="item-inner">
-					<div class="item-title item-label">Why you are not a donner?</div>
-					<div class="item-input-wrap">
-						<select required>
-							<option disabled selected>Select a reason</option>
-							<option value="donner"> Higher Age </option>
-							<option value="non-donner">Other</option>
-						</select>
-					</div>
-				</div>
-			</li>
-            
-            `;
-
-            let donnerHtml = `
-            <li class="item-content item-input item-input-with-value">
-                <div class="item-inner">
-                    <div class="item-title item-label">Did you donated blood before?</div>
-                    <div class="item-input-wrap">
-                        <select required>
-                            <option disabled selected>Select a option</option>
-                            <option value="donner"> Yes </option>
-                            <option value="non-donner">No</option>
-                        </select>
-                    </div>
-                </div>
-            </li>
-            <li class="item-content item-input item-input-with-value">
-                <div class="item-inner">
-                    <div class="item-title item-label">Birthday</div>
-                    <div class="item-input-wrap">
-                        <input type="date" placeholder="Enter date of birth" class="input-with-value">
-                        <span class="input-clear-button"></span>
-                    </div>
-                </div>
-            </li>
-            <li class="item-content item-input item-input-with-value">
-                <div class="item-inner">
-                    <div class="item-title item-label">Gender</div>
-                    <div class="item-input-wrap">
-                        <select name="" id="" required>
-                            <option selected disabled>Your Gender</option>
-                            <option value="">Male</option>
-                            <option value="">Female</option>
-                        </select>
-                    </div>
-                </div>
-            </li>
-            <li class="item-content item-input item-input-with-value">
-                <div class="item-inner">
-                    <div class="item-title item-label">Union</div>
-                    <div class="item-input-wrap">
-                        <select name="" id="" required>
-                            <option disabled selected>Your Union</option>
-                            <option value="">kaligang</option>
-                        </select>
-                    </div>
-                </div>
-            </li>
-            <li class="item-content item-input item-input-with-value">
-                <div class="item-inner">
-                    <div class="item-title item-label">Current Address</div>
-                    <div class="item-input-wrap">
-                        <input type="text" name="" id="" placeholder="Your current address" required>
-                        <span class="input-clear-button"></span>
-                    </div>
-                </div>
-            </li>
-            <li class="item-content item-input item-input-with-value">
-                <div class="item-inner">
-                    <div class="item-title item-label">Upload A document <span style="color:blue">(Accepted documents)</span></div>
-                    <div class="item-input-wrap">
-                        <input type="file" name="" id="" multiple="false" required>
-                        <span class="input-clear-button"></span>
-                    </div>
-                </div>
-            </li>
-
-            <div id="accepted-documents">
-                <p>Accepted documents:</p>
-                <p>*Nid</p>
-                <p>*licence</p>
-                <p>*passport</p>
-            </div>
-            `;
-
-            // manage account type
-            let form = document.body.querySelector('form#change-form');
-            console.log(form);
-			let accountType = form.querySelector('select#account-type');
-            console.log(accountType);
-			let fieldSpace = form.querySelector("#extra-fields");
-            console.log(fieldSpace);
-            accountType.addEventListener('change',(event)=>{
-                let type = event.target.value;
-                
-                if(type == "non-donner"){
-                    fieldSpace.innerHTML = nonDonnerHtml;
-                }else if(type == "donner"){
-                    fieldSpace.innerHTML = donnerHtml;
-                }else{
-					fieldSpace.innerHTML = "";
-				}
-            });
-        </script>
+        
 		<!-- end script -->
         
 	</body>

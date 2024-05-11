@@ -409,13 +409,13 @@
                 
                                         <div class="wrap-form">
                                             <div class="separator-small"></div>
-                                            <form class="list no-hairlines-md" id="register-form">
+                                            <form class="list no-hairlines-md" method="post">{% csrf_token %}
 												<ul>
                                                     <li class="item-content item-input item-input-with-value">
 														<div class="item-inner">
 															<div class="item-title item-label">Current Password</div>
 															<div class="item-input-wrap">
-																<input type="password" placeholder="Enter current password" class="input-with-value" required>
+																<input type="password" name="crnt_pass" placeholder="Enter current password" class="input-with-value" required>
 																<span class="input-clear-button"></span>
 															</div>
 														</div>
@@ -424,7 +424,7 @@
 														<div class="item-inner">
 															<div class="item-title item-label">New Password</div>
 															<div class="item-input-wrap">
-																<input type="password" placeholder="Enter new password" class="input-with-value" required>
+																<input type="password" name="new_pass" placeholder="Enter new password" class="input-with-value" required>
 																<span class="input-clear-button"></span>
 															</div>
 														</div>
@@ -433,15 +433,28 @@
 														<div class="item-inner">
 															<div class="item-title item-label">Confirm Password</div>
 															<div class="item-input-wrap">
-																<input type="password" placeholder="Enter password again" class="input-with-value" required>
+																<input type="password" name="conf_pass" placeholder="Enter password again" class="input-with-value" required>
 																<span class="input-clear-button"></span>
 															</div>
 														</div>
 													</li>
                                                 </ul>
-												
-												<div id="extra-fields"></div>
-																					
+												{% if error %}
+													<p style="color: red; font-size: 17px;">
+														{{ error }}
+													</p>
+													<div class="separator-small"></div>
+												{% endif %}
+												{% if success %}
+													<p style="color: green; font-size: 17px;">
+														{{ success }}
+													</p>
+													<div class="separator-small"></div>
+												{% endif %}
+												<p id="error" style="color: red; font-size: 17px; display:none">
+													New password and confirm password did not match
+												</p>
+												<div class="separator-small"></div>						
 												<div class="separator-small"></div>
 												<button type="submit" class="buttons buttons-center buttons-full">Save Password</button>
 											</form>
@@ -464,6 +477,24 @@
 		<script src="{% static 'js/app.js' %}"></script>
 		<script src="{% static 'js/app.js' %}"></script>
 		<!-- end script -->
-        
+        <script>
+			let form = document.querySelector('form');
+			let error = form.querySelector('p#error');
+			let new_pass = form.querySelector('input[name="new_pass"]');
+			let conf_pass = form.querySelector('input[name="conf_pass"]');
+
+			form.addEventListener('submit',(e)=>{
+				e.preventDefault();
+				
+				if(conf_pass.value == new_pass.value){
+					form.submit();
+				}else{
+					error.style.display = 'block';
+					setTimeout(()=>{
+						error.style.display = 'none';
+					},2000);
+				}
+			});
+		</script>
 	</body>
 </html>
